@@ -93,6 +93,7 @@ class PipelineState(TypedDict):
     run_id: str
     business_type: str
     country: str
+    max_results: int
     leads: List[Lead]
     status: str
 
@@ -105,7 +106,7 @@ def collector_node(state: PipelineState) -> PipelineState:
     run = apify_client().actor("compass/crawler-google-places").call(run_input={
         "searchStringsArray": [state["business_type"]],
         "locationQuery": state["country"],
-        "maxCrawledPlaces": 200,
+        "maxCrawledPlaces": state["max_results"],  # caps Apify usage per run
     })
     items = apify_client().dataset(run["defaultDatasetId"]).list_items().items
 
@@ -321,13 +322,14 @@ def build_graph():
     return graph.compile()
 
 
-def run_pipeline(business_type: str, country: str) -> PipelineState:
+def run_pipeline(business_type: str, country: str, max_results: int = 50) -> PipelineState:
     """Single entry point app.py calls — runs all 3 agents, returns final state."""
     app = build_graph()
     initial_state: PipelineState = {
         "run_id": str(uuid.uuid4()),
         "business_type": business_type,
         "country": country,
+        "max_results": max_results,
         "leads": [],
         "status": "collecting",
     }
