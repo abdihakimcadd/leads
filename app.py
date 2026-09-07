@@ -66,12 +66,20 @@ if not df.empty:
 
     st.dataframe(df, use_container_width=True)
 
-    valid_only = df[df["verified"] == "valid"] if "verified" in df.columns else df
-    st.download_button(
-        "Download valid leads as CSV",
-        valid_only.to_csv(index=False),
-        file_name="valid_leads.csv",
+    with_email = df[df["email"].notna()] if "email" in df.columns else df
+
+    dl_col1, dl_col2 = st.columns(2)
+    dl_col1.download_button(
+        "Download all with email (CSV)",
+        with_email.to_csv(index=False),
+        file_name="leads_with_email.csv",
         mime="text/csv",
+    )
+    dl_col2.download_button(
+        "Download all with email (JSON)",
+        with_email.to_json(orient="records", indent=2),
+        file_name="leads_with_email.json",
+        mime="application/json",
     )
 else:
     st.info("No leads yet — run the pipeline above.")
