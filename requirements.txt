@@ -1,0 +1,11 @@
+streamlit
+langgraph
+openai
+requests
+beautifulsoup4
+lxml
+dnspython
+apify-client
+supabase
+python-dotenv
+pandas
