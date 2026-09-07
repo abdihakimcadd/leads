@@ -108,7 +108,7 @@ def collector_node(state: PipelineState) -> PipelineState:
         "locationQuery": state["country"],
         "maxCrawledPlaces": state["max_results"],  # caps Apify usage per run
     })
-    items = apify_client().dataset(run["defaultDatasetId"]).list_items().items
+    items = apify_client().dataset(run.default_dataset_id).list_items().items
 
     leads: List[Lead] = []
     for item in items:
