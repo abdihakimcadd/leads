@@ -106,7 +106,7 @@ def collector_node(state: PipelineState) -> PipelineState:
     run = apify_client().actor("compass/crawler-google-places").call(run_input={
         "searchStringsArray": [state["business_type"]],
         "locationQuery": state["country"],
-        "maxCrawledPlaces": state["max_results"],  # caps Apify usage per run
+        "maxCrawledPlacesPerSearch": state["max_results"],  # correct param name — caps Apify usage per run
     })
     items = apify_client().dataset(run.default_dataset_id).list_items().items
 
