@@ -14,7 +14,11 @@ with st.form("run_form"):
     col1, col2 = st.columns(2)
     business_type = col1.text_input("Business type", placeholder="import trading company")
     country = col2.text_input("Country", placeholder="United Arab Emirates")
-    max_results = st.slider("Max businesses to collect (controls Apify usage)", 10, 300, 50, step=10)
+    max_results = st.number_input(
+        "Max businesses to collect (leave at 0 for no limit)",
+        min_value=0, value=0, step=10,
+        help="0 = no cap, Apify runs its own default. Set a number to control usage/cost.",
+    )
     submitted = st.form_submit_button("Run pipeline")
 
 if submitted:
@@ -23,7 +27,7 @@ if submitted:
     else:
         with st.spinner("Collecting businesses, finding emails, verifying... this can take a few minutes."):
             try:
-                result = run_pipeline(business_type, country, max_results)
+                result = run_pipeline(business_type, country, max_results or None)
                 st.success(
                     f"Done. {len(result['leads'])} businesses collected, "
                     f"{sum(1 for l in result['leads'] if l['email'])} emails found."
