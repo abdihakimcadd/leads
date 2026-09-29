@@ -11,6 +11,9 @@ Add these imports at the top of pipeline.py:
     import urllib3
     from urllib.parse import urljoin, urlparse, unquote
 """
+import html as htmllib
+import urllib3
+from urllib.parse import urljoin, urlparse, unquote
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
